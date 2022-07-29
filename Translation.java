@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.List;
 import syntaxtree.*;
 import visitor.*;
 
@@ -13,12 +14,21 @@ public class Translation extends GJNoArguDepthFirst<String> {
     public Translation(SymbolTable table_var) {
         this.symbol_table = table_var;
         this.alloc_function = false;
-        this.print_function = new Printer();
+        this.print_function = new PrintOutput();
         List<String> List = table_var.getClassList();
         for (int i = 1; i < List.size(); i++) {
             print_function.classes(List.get(i), table_var.getClass(List.get(i)).getFunctionNames());
         }
         print_function.enter();
+    }
+
+    public String visit(MainClass x) {
+        print_function.main();
+        x.f14.accept(this);
+        x.f15.accept(this);
+        print_function.ret("");
+        print_function.enter();
+        return null;
     }
 
     public String visit(Goal x) {
@@ -77,8 +87,8 @@ public class Translation extends GJNoArguDepthFirst<String> {
     }
 
     public String visit(ArrayLookup x) {
-        String arr_name = n.f0.accept(this);
-        String alloc = n.f2.accept(this);
+        String arr_name = x.f0.accept(this);
+        String alloc = x.f2.accept(this);
         arr_name = recordVariableCheck(arr_name);
         return print_function.lookUp(arr_name, alloc);
     }
@@ -143,8 +153,8 @@ public class Translation extends GJNoArguDepthFirst<String> {
 
     public String visit(NodeListOptional x) {
         String _ret = "";
-        for (Enumeration<Node> eNum = x.elements(); eNum.hasMoreElements();) {
-            _ret = _ret + " " + eNum.nextElement().accept(this);
+        for (Enumeration<Node> en = x.elements(); en.hasMoreElements();) {
+            _ret = _ret + " " + en.nextElement().accept(this);
         }
         return _ret;
 
@@ -223,7 +233,7 @@ public class Translation extends GJNoArguDepthFirst<String> {
     }
 
     public String visit(AllocationExpression x) {
-        return print_function.allocation(x.f1.accept(this), symbol_table.getClass(x.f1.accept(this)).recordSize());
+        return print_function.allocation(x.f1.accept(this), symbol_table.getClass(x.f1.accept(this)).recordTableSize());
     }
 
     public String visit(ThisExpression x) {
@@ -233,7 +243,7 @@ public class Translation extends GJNoArguDepthFirst<String> {
     public String visit(AndExpression x) {
         String a = x.f0.accept(this);
         String b = print_function.startSS(a);
-        String var1 = n.f2.accept(this);
+        String var1 = x.f2.accept(this);
         print_function.continueSS(b);
         print_function.noWork(var1);
         print_function.endSS(b);
