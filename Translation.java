@@ -20,7 +20,7 @@ public class Translation extends GJNoArguDepthFirst<String> {
         {
             print_function.classes(List.get(i),table_var.getClass(classList.))
         }
-        print_function.addEnter();
+        print_function.enter();
     }
 
     public String visit(Goal x) {
@@ -50,7 +50,7 @@ public class Translation extends GJNoArguDepthFirst<String> {
         String class_name = current_class.getClassId();
         String function_name = x.f2.accept(this);
         String parameters = x.f4.accept(this);
-        currMethod = current_class.getMethod(function_name);
+        current_function = current_class.getMethod(function_name);
         print_function.methodDeclare(class_name, function_name, parameters);
         x.f8.accept(this);
         String var1 = x.f10.accept(this);
@@ -156,8 +156,8 @@ public class Translation extends GJNoArguDepthFirst<String> {
         String function_name;
         String param_var; 
         ClassSymbol class_symbol;
+
         class_var = x.f0.accept(this);
-       
         class_name= print_function.getClassName(class_var);
         if (class_name == null) {
             class_name = getIDType(class_var);
@@ -200,24 +200,24 @@ public class Translation extends GJNoArguDepthFirst<String> {
     public String visit(PlusExpression x) {
         String first = x.f0.accept(this);
         String second = x.f2.accept(this);
-        first = recordVar1ableCheck(first);
-        second = recordVar1ableCheck(second);
+        first = recordVariableCheck(first);
+        second = recordVariableCheck(second);
         return print_function.add(first, second);
     }
 
     public String visit(MinusExpression x) {
         String first = x.f0.accept(this);
         String second = x.f2.accept(this);
-        first = recordVar1ableCheck(first);
-        second = recordVar1ableCheck(second);
+        first = recordVariableCheck(first);
+        second = recordVariableCheck(second);
         return print_function.subtract(first, second);
     }
 
     public String visit(TimesExpression x) {
         String first = x.f0.accept(this);
         String second = x.f2.accept(this);
-        first = recordVar1ableCheck(first);
-        second = recordVar1ableCheck(second);
+        first = recordVariableCheck(first);
+        second = recordVariableCheck(second);
         return print_function.multiply(first, second);
     }
 
@@ -246,8 +246,8 @@ public class Translation extends GJNoArguDepthFirst<String> {
     public String visit(CompareExpression x) {
         String first = x.f0.accept(this);
         String second = x.f2.accept(this);
-        first = recordVar1ableCheck(first);
-        second = recordVar1ableCheck(second);
+        first = recordVariableCheck(first);
+        second = recordVariableCheck(second);
         return print_function.lts(first, second);
     }
 
@@ -265,13 +265,13 @@ public class Translation extends GJNoArguDepthFirst<String> {
 
     public String visit(FormalParameter x) {
         String state = x.f1.accept(this);
-        state = recordVar1ableCheck(state);
+        state = recordVariableCheck(state);
         return state;
     }
 
     public String visit(FormalParameterRest x) {
         String state = x.f1.accept(this);
-        state = recordVar1ableCheck(state);
+        state = recordVariableCheck(state);
         return state;
     }
 
@@ -301,4 +301,22 @@ public class Translation extends GJNoArguDepthFirst<String> {
             return temp;
         }
     }
+    public String recordCheck(String x){
+		if(current_class != null){
+			if(current_class.checkRecordTable(x)){
+				x = "[this+" + current_class.getRecordOffset(x) + "]";
+			}
+		}
+		return x;
+	}
+
+	public String recordVariableCheck(String x){
+		if(current_class != null){
+			if(current_class.checkRecordTable(x)){
+				x = print_function.getRecord(current_class.getRecordOffset(x));
+			}
+		}
+		
+		return x;
+	}
 }
