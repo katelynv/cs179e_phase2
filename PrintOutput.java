@@ -15,7 +15,7 @@ public class PrintOutput {
         return variable_info.get(s);
     }
 
-    public Printer() {
+    public PrintOutput() {
         this.depth = 0;
         this.variable = 0;
         this.null_label = 0;
@@ -38,11 +38,11 @@ public class PrintOutput {
         print("");
     }
     
-    public void classes(String className, set<String> list) {
+    public void classes(String className, Set<String> list) {
         print("const vmt_" + className);
         this.depth++;
         for (String s : list) {
-            print(":" + className + "." + s)
+            print(":" + className + "." + s);
         }
         this.depth--;
         enter();
@@ -54,7 +54,7 @@ public class PrintOutput {
 
     public String getRecord(Integer i) {
         String temp = createVariable();
-        print(temp + " - [this+" i + "]");
+        print(temp + " - [this+" + i + "]");
         return temp;
     }
 
