@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.List;
 import syntaxtree.*;
 import visitor.*;
 
@@ -9,17 +8,17 @@ public class Translation extends GJNoArguDepthFirst<String> {
     private SymbolTable symbol_table;
     private ClassSymbol current_class;
     private FunctionSymbol current_function;
-    private boolean alloc_function = false;
+    private boolean alloc_function;
 
     public Translation (SymbolTable table_var)
     {
         this.symbol_table=table_var;
         this.alloc_function = false;
         this.print_function= new PrintOutput();
-        List<String> List = table_var.getClassList();
-        for (int i=1; i< List.size(); i++)
+        List<String> tempList = table_var.getClassList();
+        for (int i=1; i< tempList.size(); i++)
         {
-            print_function.classes(List.get(i),table_var.getClass(List.get(i)).getFunctionNames());
+            print_function.classes(tempList.get(i),table_var.getClass(tempList.get(i)).getFunctionNames());
         }
         print_function.enter();
     }

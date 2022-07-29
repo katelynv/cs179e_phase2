@@ -2,6 +2,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
+
+
 public class PrintOutput {
     private int depth;
     private int variable;
@@ -17,6 +19,7 @@ public class PrintOutput {
 
     public PrintOutput() {
         this.depth = 0;
+        this.label = 0;
         this.variable = 0;
         this.null_label = 0;
         this.if_else = 0;
@@ -26,7 +29,7 @@ public class PrintOutput {
 
     public String createLabel() {
         label++;
-        return "Label"+label;
+        return "Label" + label;
     }
 
     public void main() {

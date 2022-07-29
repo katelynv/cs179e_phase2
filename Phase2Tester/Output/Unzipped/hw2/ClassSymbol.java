@@ -69,13 +69,11 @@ public class ClassSymbol {
     public void addFunction(String name, String type) {
         this.functions.put(name, new FunctionSymbol(name, type));
         vtable.put(name,vtable_offset);
-        vtable_offset = vtable_offset + 4;
+        vtable_offset += 4;
     }
 
     public void addVariables(String name, String type) {
         this.variables.put(Symbol.symbol(name), type);
-        recordtable.put(name,record_offset);
-        record_offset = record_offset + 4;
     }
 
     public FunctionSymbol getFunction(String s) {
@@ -95,6 +93,6 @@ public class ClassSymbol {
     }
 
     public Set<String> getFunctionNames() {
-        return vtable.keySet();
+        return functions.keySet();
     }
 }
