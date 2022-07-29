@@ -15,8 +15,8 @@ public class J2V {
                 if (second.errors()) {
                     System.exit(1);
                 } else {
-                    
-                    System.out.println("Program type checked successfully");
+                    Translation t = new Translation(first.getSymbolTable());
+                    root.accept(t);
                 }
             }
         } catch (ParseException e) {
