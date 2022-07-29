@@ -10,15 +10,13 @@ public class Translation extends GJNoArguDepthFirst<String> {
     private FunctionSymbol current_function;
     private boolean alloc_function = false;
 
-    public Translation (SymbolTable table_var)
-    {
-        this.symbol_table=table_var;
+    public Translation(SymbolTable table_var) {
+        this.symbol_table = table_var;
         this.alloc_function = false;
-        this.print_function= new Printer();
+        this.print_function = new Printer();
         List<String> List = table_var.getClassList();
-        for (int i=1; i< List.size(); i++)
-        {
-            print_function.classes(List.get(i),table_var.getClass(classList.))
+        for (int i = 1; i < List.size(); i++) {
+            print_function.classes(List.get(i), table_var.getClass(List.get(i)).getFunctionNames());
         }
         print_function.enter();
     }
@@ -47,14 +45,14 @@ public class Translation extends GJNoArguDepthFirst<String> {
     }
 
     public String visit(MethodDeclaration x) {
-        String class_name = current_class.getClassId();
+        String class_name = current_class.getClassName();
         String function_name = x.f2.accept(this);
         String parameters = x.f4.accept(this);
-        current_function = current_class.getMethod(function_name);
+        current_function = current_class.getFunction(function_name);
         print_function.methodDeclare(class_name, function_name, parameters);
         x.f8.accept(this);
         String var1 = x.f10.accept(this);
-        if (current_class.checkRecord(var1)) {
+        if (current_class.checkRecordTable(var1)) {
             var1 = print_function.getRecord(current_class.getRecordOffset(var1));
         }
         print_function.ret(var1);
@@ -68,21 +66,21 @@ public class Translation extends GJNoArguDepthFirst<String> {
 
     public String visit(ExpressionRest x) {
         String exp = x.f1.accept(this);
-        exp = recordVar1ableCheck(exp);
+        exp = recordVariableCheck(exp);
         return exp;
     }
 
     public String visit(ExpressionList x) {
         String exp = x.f0.accept(this);
-       exp = exp + x.f1.accept(this);
+        exp = exp + x.f1.accept(this);
         return exp;
     }
 
     public String visit(ArrayLookup x) {
         String arr_name = n.f0.accept(this);
         String alloc = n.f2.accept(this);
-        arr_name = recordVar1ableCheck(arr_name);
-        return print_function.lookup(arr_name, alloc);
+        arr_name = recordVariableCheck(arr_name);
+        return print_function.lookUp(arr_name, alloc);
     }
 
     public String visit(Statement x) {
@@ -97,7 +95,7 @@ public class Translation extends GJNoArguDepthFirst<String> {
 
     public String visit(IfStatement x) {
         String state_var = x.f2.accept(this);
-        state_var = recordVar1ableCheck(state_var);
+        state_var = recordVariableCheck(state_var);
         String if_state_var = state_var;
         String label_var = print_function.startIf(if_state_var);
         x.f4.accept(this);
@@ -109,7 +107,7 @@ public class Translation extends GJNoArguDepthFirst<String> {
     }
 
     public String visit(WhileStatement x) {
-        String current_Label = print_function.beginWhile();
+        String current_Label = print_function.startWhile();
         String var_label = x.f2.accept(this);
         print_function.continueWhile(current_Label, var_label);
         x.f4.accept(this);
@@ -132,8 +130,10 @@ public class Translation extends GJNoArguDepthFirst<String> {
     }
 
     public String visit(ArrayAssignmentStatement x) {
-        String first;String var1; String equal_var; 
-        first= recordCheck(x.f0.accept(this));
+        String first;
+        String var1;
+        String equal_var;
+        first = recordCheck(x.f0.accept(this));
         var1 = print_function.arrayPrint(first, x.f2.accept(this));
         equal_var = x.f5.accept(this);
         var1 = "[" + var1 + "+4]";
@@ -143,36 +143,37 @@ public class Translation extends GJNoArguDepthFirst<String> {
 
     public String visit(NodeListOptional x) {
         String _ret = "";
-        for (Enumeration<Node> enum = x.elements(); enum.hasMoreElements();) {
-            _ret = _ret + " " + enum.nextElement().accept(this);
+        for (Enumeration<Node> eNum = x.elements(); eNum.hasMoreElements();) {
+            _ret = _ret + " " + eNum.nextElement().accept(this);
         }
         return _ret;
+
     }
 
     public String visit(MessageSend x) {
-        String class_var; 
+        String class_var;
         String class_name;
-        String return_val; 
+        String return_val;
         String function_name;
-        String param_var; 
+        String param_var;
         ClassSymbol class_symbol;
 
         class_var = x.f0.accept(this);
-        class_name= print_function.getClassName(class_var);
+        class_name = print_function.getClassName(class_var);
         if (class_name == null) {
             class_name = getIDType(class_var);
         }
-        
-        class_symbol= symbol_table.getClass(class_name);
+
+        class_symbol = symbol_table.getClass(class_name);
         if (class_symbol == null) {
-            class_symbol= current_class;
+            class_symbol = current_class;
         }
-         
+
         function_name = x.f2.accept(this);
-        param_var= x.f4.accept(this);
+        param_var = x.f4.accept(this);
         class_var = recordCheck(class_var);
-        
-        return_val= print_function.functionCall(class_var, class_var.getOffset(function_name), param_var);
+
+        return_val = print_function.functionCall(class_var, class_symbol.getvtable_offset(function_name), param_var);
         return return_val;
     }
 
@@ -285,7 +286,7 @@ public class Translation extends GJNoArguDepthFirst<String> {
         if (symbol_table.getClass(x) != null) {
             return x;
         } else if (x == "this") {
-            return current_class.getClassId();
+            return current_class.getClassName();
         } else {
             if (x == "int" || x == "boolean") {
                 return x;
@@ -301,22 +302,23 @@ public class Translation extends GJNoArguDepthFirst<String> {
             return temp;
         }
     }
-    public String recordCheck(String x){
-		if(current_class != null){
-			if(current_class.checkRecordTable(x)){
-				x = "[this+" + current_class.getRecordOffset(x) + "]";
-			}
-		}
-		return x;
-	}
 
-	public String recordVariableCheck(String x){
-		if(current_class != null){
-			if(current_class.checkRecordTable(x)){
-				x = print_function.getRecord(current_class.getRecordOffset(x));
-			}
-		}
-		
-		return x;
-	}
+    public String recordCheck(String x) {
+        if (current_class != null) {
+            if (current_class.checkRecordTable(x)) {
+                x = "[this+" + current_class.getRecordOffset(x) + "]";
+            }
+        }
+        return x;
+    }
+
+    public String recordVariableCheck(String x) {
+        if (current_class != null) {
+            if (current_class.checkRecordTable(x)) {
+                x = print_function.getRecord(current_class.getRecordOffset(x));
+            }
+        }
+
+        return x;
+    }
 }
