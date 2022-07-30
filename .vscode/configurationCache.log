@@ -1,1 +1,1 @@
-{"buildTargets":["J2V","clean","folder","parser","test","vapor"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}
+{"buildTargets":["J2V","clean","folder","parser","test1","test10","test11","test12","test13","test2","test3","test4","test5","test6","test7","test8","test9","tester","vapor"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

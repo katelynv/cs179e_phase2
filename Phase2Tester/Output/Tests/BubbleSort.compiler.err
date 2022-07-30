@@ -1,0 +1,4 @@
+WARNING: A command line option has enabled the Security Manager
+WARNING: The Security Manager is deprecated and will be removed in a future release
+Error: Could not find or load main class J2V
+Caused by: java.lang.ClassNotFoundException: J2V

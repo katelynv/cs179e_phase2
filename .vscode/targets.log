@@ -13,7 +13,7 @@ Makefile:10: warning: ignoring old commands for target `vapor'
 make.exe: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Fri Jul 29 19:57:21 2022
+# Make data base, printed on Sat Jul 30 11:06:19 2022
 
 # Variables
 
@@ -21,7 +21,6 @@ make.exe: *** No rule to make target `all'.  Stop.
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
- 
 # makefile
 MAKEFLAGS = Rrqp
 # automatic
@@ -31,6 +30,7 @@ MAKEFLAGS = Rrqp
 # environment
 HOMEDRIVE = C:
 # automatic
+ 
 @F = $(notdir $@)
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
@@ -85,7 +85,7 @@ ELECTRON_RUN_AS_NODE = 1
 # automatic
 %F = $(notdir $%)
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_2708_UCONQHTPKAMJTSCM
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_6992_UCXCLFBWMWZJYPST
 # environment
 COMPUTERNAME = LAPTOP-B5E6O97R
 # environment
@@ -197,7 +197,7 @@ TERM = cygwin
 # environment
 FPS_BROWSER_APP_PROFILE_STRING = Internet Explorer
 # environment
-VSCODE_PID = 2708
+VSCODE_PID = 6992
 # environment
 USERDOMAIN_ROAMINGPROFILE = LAPTOP-B5E6O97R
 # variable set hash-table stats:
@@ -209,9 +209,9 @@ USERDOMAIN_ROAMINGPROFILE = LAPTOP-B5E6O97R
 
 # Directories
 
-# . (device -21478, inode 12984068): 54 files, no impossibilities.
+# . (device -21478, inode 12984068): 67 files, no impossibilities.
 
-# 54 files, no impossibilities in 1 directories.
+# 67 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -225,6 +225,15 @@ J2V.java:
 #  Modification time never checked.
 #  File has not been updated.
 
+test4:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 40):
+	java J2V.java < Phase2Tester/SelfTestCases/4-Vars.java > Vars.vapor
+	java -jar vapor.jar run Vars.vapor
+	
+
 # Not a target:
 all:
 #  Command-line target.
@@ -234,17 +243,44 @@ all:
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
 
+test3:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 36):
+	java J2V.java < Phase2Tester/SelfTestCases/3-Call.java > Call.vapor
+	java -jar vapor.jar run Call.vapor
+	
+
 # Not a target:
 .SUFFIXES:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 
+test8:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 56):
+	java J2V.java < Phase2Tester/SelfTestCases/Factorial.java > Factorial.vapor
+	java -jar vapor.jar run Factorial.vapor
+	
+
+test9:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 60):
+	java J2V.java < Phase2Tester/SelfTestCases/LinearSearch.java > LinearSearch.vapor
+	java -jar vapor.jar run LinearSearch.vapor
+	
+
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
  
-#  Last modified 2022-07-29 17:55:23
+#  Last modified 2022-07-29 21:03:10
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -252,6 +288,7 @@ Makefile:
 
 folder:
 #  Implicit rule search has not been done.
+ 
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 24):
@@ -259,7 +296,7 @@ folder:
 	rm -rf *.tgz
 	
 
-test: J2V.java
+tester: J2V.java
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -278,6 +315,15 @@ vapor.jar:
 #  Modification time never checked.
 #  File has not been updated.
 
+test1:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 28):
+	java J2V.java < Phase2Tester/SelfTestCases/1-PrintLiteral.java > PrintLiteral.vapor
+	java -jar vapor.jar run PrintLiteral.vapor
+	
+
 J2V: J2V.java
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -285,6 +331,33 @@ J2V: J2V.java
 #  commands to execute (from `Makefile', line 6):
 	javac J2V.java
 	java J2V.java < P.java > P.vapor
+	
+
+test6:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 48):
+	java J2V.java < Phase2Tester/SelfTestCases/BinaryTree.java > BinaryTree.vapor
+	java -jar vapor.jar run BinaryTree.vapor
+	
+
+test10:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 64):
+	java J2V.java < Phase2Tester/SelfTestCases/LinkedList.java > LinkedList.vapor
+	java -jar vapor.jar run LinkedList.vapor
+	
+
+test11:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 68):
+	java J2V.java < Phase2Tester/SelfTestCases/MoreThan4.java > MoreThan4.vapor
+	java -jar vapor.jar run MoreThan4.vapor
 	
 
 parser: minijava.jj.txt jtb.jar
@@ -302,6 +375,15 @@ parser: minijava.jj.txt jtb.jar
 #  Modification time never checked.
 #  File has not been updated.
 
+test12:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 72):
+	java J2V.java < Phase2Tester/SelfTestCases/QuickSort.java > QuickSort.vapor
+	java -jar vapor.jar run QuickSort.vapor
+	
+
 clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
@@ -317,11 +399,38 @@ minijava.jj.txt:
 #  Modification time never checked.
 #  File has not been updated.
 
+test2:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 32):
+	java J2V.java < Phase2Tester/SelfTestCases/2-Add.java > Add.vapor
+	java -jar vapor.jar run Add.vapor
+	
+
+test13:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 76):
+	java J2V.java < Phase2Tester/SelfTestCases/TreeVisitor.java > TreeVisitor.vapor
+	java -jar vapor.jar run TreeVisitor.vapor
+	
+
 # Not a target:
 p.vapor:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+
+test7:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 52):
+	java J2V.java < Phase2Tester/SelfTestCases/BubbleSort.java > BubbleSort.vapor
+	java -jar vapor.jar run BubbleSort.vapor
+	
 
 # Not a target:
 jtb.jar:
@@ -334,12 +443,20 @@ vapor: vapor.jar p.vapor vapor.jar p.vapor
 #  Modification time never checked.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 21):
- 
 	java -jar vapor.jar run p.vapor
 	
 
+test5:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  commands to execute (from `Makefile', line 44):
+	java J2V.java < Phase2Tester/SelfTestCases/5-OutOfBounds.java > OutOfBounds.vapor
+	java -jar vapor.jar run OutOfBounds.vapor
+	
+
 # files hash-table stats:
-# Load=15/1024=1%, Rehash=0, Collisions=1/35=3%
+# Load=28/1024=3%, Rehash=0, Collisions=2/48=4%
 # VPATH Search Paths
 
 # No `vpath' search paths.
@@ -351,6 +468,6 @@ vapor: vapor.jar p.vapor vapor.jar p.vapor
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri Jul 29 19:57:21 2022
+# Finished Make data base on Sat Jul 30 11:06:19 2022
 
  

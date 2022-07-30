@@ -2,242 +2,221 @@ import syntaxtree.*;
 import visitor.*;
 
 public class SecondPassVisitor extends GJDepthFirst<String, SymbolTable> {
-    private SymbolTable symbol_table;
-    private ClassSymbol current_class;
-    private FunctionSymbol current_function;
-    private boolean errorCheck = false;
+	private SymbolTable symbol_table;
+	private ClassSymbol current_class;
+	private FunctionSymbol current_function;
+	private boolean anyErrors = false;
 
-    public SecondPassVisitor(SymbolTable Table)
-    {
-        this.symbol_table=Table;
-    }
+	public boolean errors(){
+		return anyErrors;
+	}
 
-    public String visit(Goal var,SymbolTable tableVar)
-    {
-        var.f0.accept(this,tableVar);
-        var.f1.accept(this,tableVar);
-        return null;
-    }
+	public SecondPassVisitor(SymbolTable stable) {
+		this.symbol_table = stable;
+	}
 
-    public String visit(MainClass var,SymbolTable tableVar)
-    {
-        current_class=symbol_table.getClass(VisitorFunctions.className(var));
-        current_function= current_class.getFunction("main");
-        var.f15.accept(this,tableVar);
-        return null;
+	public String visit(Goal n, SymbolTable stable){
+		n.f0.accept(this, stable);
+		n.f1.accept(this, stable);
+		return null;
+	}
 
-    }
+	public String visit(MainClass n, SymbolTable stable) {
+		current_class = symbol_table.getClass(VisitorFunctions.className(n));
+		current_function = current_class.getFunction("main");
+		n.f15.accept(this, stable);
+		return null;
+	}
 
-    public String visit(ClassDeclaration var,SymbolTable tableVar)
-    {
-        current_class = symbol_table.getClass(VisitorFunctions.className(var));
-        current_function=null;
-        var.f4.accept(this,symbol_table);
-        return null;
-    }
+	public String visit(ClassDeclaration n, SymbolTable stable){
+		current_class = symbol_table.getClass(VisitorFunctions.className(n));
+		current_function = null;
+		n.f4.accept(this, stable);
+		return null;
+	}
 
-   
-
-    public String visit(MethodDeclaration var,SymbolTable tableVar){  
-        current_function=current_class.getFunction(VisitorFunctions.methodName(var));
-        String funt_type= VisitorFunctions.getType(var.f1);
-        String return_type= var.f10.accept(this,symbol_table);
-        if(funt_type!= null||funt_type!= ""||return_type!="")
-        {
-            return_type=getIDType(return_type);
-            if(funt_type!=return_type)
-            {
-                errorCheck = true;
-                return null;
-            }
-        }
-        var.f8.accept(this,symbol_table);
-        return null;
-    }
-
-    public String visit(Statement var,SymbolTable tableVar)
-    {
-        var.f0.choice.accept(this,tableVar);
-        return null;
-    }
-
-    public String visit(AssignmentStatement var,SymbolTable tableVar)
-    {
-        String id= VisitorFunctions.getId(var.f0);
-        String id2= var.f2.accept(this,tableVar);
-        if(id!=null&&id2!=null)
-        {
-            String id_type=getIDType(id);
-            String id_type2=getIDType(id2);
-            if(id_type != id_type2 || id_type == null || id_type2 == null){
-				errorCheck = true;
+	public String visit(MethodDeclaration n, SymbolTable stable){
+		
+		current_function = current_class.getFunction(VisitorFunctions.methodName(n));
+		String m_type = VisitorFunctions.getType(n.f1);
+		String returnType = n.f10.accept(this, stable);
+		if(m_type != null || m_type != "" || returnType != null || returnType != "" ){
+			returnType = getIDType(returnType);
+			if(m_type != returnType){
+				anyErrors = true;
+				return null;
 			}
-        }
-        return null;
-    }
+		}
+		n.f8.accept(this, stable);
+		return null;
+	}
 
-    public String visit(PrintStatement var,SymbolTable tableVar)
-    {
-        String StatementType=getIDType(var.f2.accept(this,tableVar));
-        if(StatementType!="int")
-        {
-            errorCheck=true;
-        }
-        return null;
-    }
+	public String visit(Statement n, SymbolTable stable) {
+		n.f0.choice.accept(this, stable);
+		return null;
+	}
 
-    public String visit(Expression var, SymbolTable tableVar)
-    {
-        return var.f0.choice.accept(this,tableVar);
-    }
+	public String visit(AssignmentStatement n, SymbolTable stable) {
+		String id = VisitorFunctions.getId(n.f0);
+		String id2 = n.f2.accept(this, stable);
+		if(id != null && id2 != null){
+			String id_type = getIDType(id);
+			String id_type2 = getIDType(id2);
+			if(id_type != id_type2 || id_type == null || id_type2 == null){
+				anyErrors = true;
+			}
+		}
+		
+		return null;
+	}
 
-    public String visit(ArrayLookup var,SymbolTable tableVar)
-    {
-        String id =getIDType(var.f0.accept(this,tableVar));
-        String id2 =getIDType(var.f2.accept(this,tableVar));
-        if(id =="int []"&& id2=="int")
-        {
-        return id2;
-        }
-        else
-        {
-            errorCheck=true;
-            return "";
-        }
-    }
+	public String visit(PrintStatement n, SymbolTable stable) {
+		String statementType = getIDType(n.f2.accept(this, stable));
+		if(statementType != "int"){
+			anyErrors = true;
+		}
+		return null;
+	}
 
-    public String visit(PlusExpression var,SymbolTable tableVar)
-    {
-        String first_var =getIDType(var.f0.accept(this,tableVar));
-        String second_var =getIDType(var.f2.accept(this,tableVar));
-        if (first_var==second_var)
-        {
-            return second_var;
-        }else{
-            return null;
-        }
-    }
+	public String visit(Expression n, SymbolTable stable){
+		return n.f0.choice.accept(this, stable);
+	}
 
-    public String visit(MinusExpression var,SymbolTable tableVar)
-    {
-        String first_var =getIDType(var.f0.accept(this,tableVar));
-        String second_var =getIDType(var.f2.accept(this,tableVar));
-        if (first_var==second_var)
-        {
-            return second_var;
-        }else{
-            return null;
-        }
-    }
+	public String getIDType(String x){
+		if(symbol_table.getClass(x) != null){
+			return x;	
+		}
+		else{
+			if(x == "int" || x == "boolean"){
+				return x;
+			}
+			String name = "";
+			if(current_function.getLocalType(x) != null){
+				name = current_function.getLocalType(x);
+			}
+			else if(current_function.getParameterType(x) != null){
+				name = current_function.getParameterType(x);
+			}
+			else if(current_class.getVariable(x) != null){
+				name = current_class.getVariable(x);
+			}
+			return name;
+		}
+	}
 
-    public String visit(TimesExpression var,SymbolTable tableVar)
-    {
-        String first_var =getIDType(var.f0.accept(this,tableVar));
-        String second_var =getIDType(var.f2.accept(this,tableVar));
-        if (first_var==second_var)
-        {
-            return second_var;
-        }else{
-            return null;
-        }
-    }
-    public String visit(MessageSend var,SymbolTable tableVar)
-    {
-        String functionName=VisitorFunctions.getId(var.f2);
-        String className=getIDType(var.f0.accept(this,tableVar));
-        ClassSymbol classCheck = symbol_table.getClass(className);
-        if(classCheck!=null)
-        {
-            FunctionSymbol classfuncCheck =classCheck.getFunction(functionName);
-            if( classfuncCheck==null)
-            {
-                errorCheck =true;
-                return "";
-            }
-            else{
-				if(var.f4.node != null){
-					int listSize = VisitorFunctions.getListSize(var.f4.node);
-					int functionSize = classfuncCheck.parameterSize();
-					if(functionSize != listSize){
-						errorCheck = true;
+	public String visit(MessageSend n, SymbolTable stable){
+		
+		String c_name = getIDType(n.f0.accept(this, stable));
+		String m_name = VisitorFunctions.getId(n.f2);
+		ClassSymbol c_Class = symbol_table.getClass(c_name);
+		if(c_Class != null){
+				FunctionSymbol c_Method = c_Class.getFunction(m_name);
+			if(c_Method == null){
+				anyErrors = true;
+				return "";
+			}
+			else{
+				if(n.f4.node != null){
+					int callSize = VisitorFunctions.getListSize(n.f4.node);
+					int methodSize = c_Method.parameterSize();
+					if(methodSize != callSize){
+						anyErrors = true;
 					}
 				}
-				String functionType = classfuncCheck.getFunctionType();
-				return functionType;
-        }
-    }else{
-        errorCheck = true;
-        return "";
-    }
-}
+				String m_type = c_Method.getFunctionType();
+				return m_type;
+			}
+		}
+		else{
+			anyErrors = true;
+			return "";
+		}
+		
+		
+	}
+
+	public String visit(PrimaryExpression n, SymbolTable stable){
+		String c_name = n.f0.choice.accept(this, stable);
+		return c_name; 
+	}
+
+	public String visit(ArrayLookup n, SymbolTable stable){
+		String id1 = getIDType(n.f0.accept(this, stable));
+		String id2 = getIDType(n.f2.accept(this, stable));
+		if(id1 == "int []" && id2 == "int"){
+			return id2;
+		}
+		else{
+			anyErrors = true;
+			return "";
+		}
+	}
+
+	public String visit(AllocationExpression n, SymbolTable stable){
+		String c_name = VisitorFunctions.getId(n.f1);
+		return c_name;
+	}
+
+	public String visit(IntegerLiteral n, SymbolTable stable){
+		String c_name = "int";
+		return c_name;
+	}
+
+	public String visit(FalseLiteral n, SymbolTable stable){
+		String c_name = "boolean";
+		return c_name;
+	}
+
+	public String visit(TrueLiteral n, SymbolTable stable){
+		String c_name = "boolean";
+		return c_name;
+	}
+
+	public String visit(ThisExpression n, SymbolTable stable){
+		return current_class.getClassName();
+	}
+
+	public String visit(BracketExpression n, SymbolTable stable){
+		return n.f1.accept(this, stable);
+	}
+
+	public String visit(PlusExpression n, SymbolTable stable){
+		String first = getIDType(n.f0.accept(this, stable));
+		String second = getIDType(n.f2.accept(this, stable));
+		if(first == second){
+			return first;
+		}
+		else{
+			return null;
+		}
+	}
+
+	public String visit(MinusExpression n, SymbolTable stable){
+		String first = getIDType(n.f0.accept(this, stable));
+		String second = getIDType(n.f2.accept(this, stable));
+		if(first == second){
+			return first;
+		}
+		else{
+			return null;
+		}
+	}
+
+	public String visit(TimesExpression n, SymbolTable stable){
+		String first = getIDType(n.f0.accept(this, stable));
+		String second = getIDType(n.f2.accept(this, stable));
+		if(first == second){
+			return first;
+		}
+		else{
+			return null;
+		} 
+	}
+
+	public String visit(Identifier n, SymbolTable stable){
+		return VisitorFunctions.getId(n);
+	}
 
 
-    public String visit(IntegerLiteral var,SymbolTable tableVar)
-    {
-        String className= "int";
-        return className;
-    }
 
-    public String visit(TrueLiteral var,SymbolTable tableVar)
-    {
-        String className= "boolean";
-        return className;
-    }
-
-    public String visit(FalseLiteral var,SymbolTable tableVar)
-    {
-        String className= "boolean";
-        return className;
-    }
-
-    public String visit(Identifier var,SymbolTable tableVar)
-    {
-        return VisitorFunctions.getId(var);
-    }
-
-    public String visit(ThisExpression var,SymbolTable tableVar)
-    {
-        return current_class.getClassName();
-    }
-
-    public String visit(BracketExpression var,SymbolTable tableVar)
-    {
-        return var.f1.accept(this,tableVar);
-    }
-
-    public String visit(AllocationExpression var,SymbolTable tableVar)
-    {
-        String className= VisitorFunctions.getId(var.f1);
-        return className;
-    }
-
-    public String visit(PrimaryExpression var,SymbolTable tableVar)
-    {
-        String className= var.f0.choice.accept(this,tableVar);
-        return className;
-    }
-
-    public boolean errors()
-    {
-        return errorCheck;
-    }
-
-    public String getIDType(String s) {
-        if (symbol_table.getClass(s) != null) {
-            return s;
-        } else {
-            if (s == "int" || s == "boolean") {
-                return s;
-            } 
-            String temp = "";
-            if (current_function.getLocalType(s) != null) {
-                temp = current_function.getLocalType(s);
-            } else if (current_function.getParameterType(s) != null) {
-                temp = current_function.getParameterType(s);
-            } else if (current_class.getVariable(s) != null) {
-                temp = current_class.getVariable(s);
-            }
-            return temp;
-        }
-    }
 }

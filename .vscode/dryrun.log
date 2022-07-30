@@ -6,5 +6,6 @@ Makefile:10: warning: ignoring old commands for target `vapor'
 
 java -jar jtb.jar minijava.jj.txt
 javacc jtb.out.jj
+ 
 make.exe: Leaving directory `/c/Users/kienv/Desktop/cs179e/cs179_phase2'
  

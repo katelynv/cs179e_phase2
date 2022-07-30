@@ -4,120 +4,127 @@ import java.util.Set;
 import syntaxtree.*;
 
 public class VisitorFunctions {
-    public static boolean checkClass(NodeList names) {
-        Set<String> temp_set = new HashSet<>();
-        for (int i = 0; i < names.size(); i++) {
-            String temp_string = VisitorFunctions.className(names.elementAt(i));
-            if (temp_set.contains(temp_string)) {
-                return false;
-            } else {
-                temp_set.add(temp_string);
-            }
-        }
-        return true;
-    }
+	public static boolean checkClass(NodeList names) {
+		Set<String> distinct = new HashSet<>();
+		for (int j = 0; j < names.size(); j++) {
+			String id = VisitorFunctions.className(names.elementAt(j));
+			if (distinct.contains(id)) {
+				return false;
+			} else {
+				distinct.add(id);
+			}
+		}
+		return true;
+	}
 
-    public static String className(Node n) {
-        String className = "";
-        if (n instanceof MainClass) {
-            className = ((MainClass) n).f1.f0.toString();
-        } else if (n instanceof ClassDeclaration) {
-            className = ((ClassDeclaration) n).f1.f0.toString();
-        } else if (n instanceof ClassExtendsDeclaration) {
-            className = ((ClassExtendsDeclaration) n).f1.f0.toString();
-        }
-        return className;
-    }
+	public static String className(Node cname) { 
+		String nameOfClass = "";
+		if (cname instanceof MainClass) {
+			nameOfClass = ((MainClass) cname).f1.f0.toString();
+		} else if (cname instanceof ClassDeclaration) {
+			nameOfClass = ((ClassDeclaration) cname).f1.f0.toString();
+		} else if (cname instanceof ClassExtendsDeclaration) {
+			nameOfClass = ((ClassExtendsDeclaration) cname).f1.f0.toString();
+		}
+		return nameOfClass;
+	}
 
-    public static boolean checkMethod (NodeListOptional n) {
-        Set<String> temp_set = new HashSet<>();
+	public static boolean checkMethod(NodeListOptional names){
+		Set<String> distinct = new HashSet<>();
+		
+		for(int j = 0; j < names.size(); j++){
+			String methodName = VisitorFunctions.methodName((MethodDeclaration) names.elementAt(j));
+			if(distinct.contains(methodName)){
+				return false;
+			}
+			else{
+				distinct.add(methodName);
+			}
+		}
+		return true;
+	}
 
-        for (int i = 0; i < n.size(); i++) {
-            String temp_string = VisitorFunctions.methodName((MethodDeclaration) n.elementAt(i));
-            if (temp_set.contains(temp_string)) {
-                return false;
-            } else {
-                temp_set.add(temp_string);
-            }
-        }
-        return true;
-    }
+	public static boolean checkId(NodeListOptional ids){
+		Set<String> distinct = new HashSet<>();
+		
+		for(int j = 0; j < ids.size(); j++){
+			String methodName = VisitorFunctions.getId(((VarDeclaration) ids.elementAt(j)).f1);
+			if(distinct.contains(methodName)){
+				return false;
+			}
+			else{
+				distinct.add(methodName);
+			}
+		}
+		return true;
+	}
 
-    public static String methodName(MethodDeclaration m) {
-        return m.f2.f0.toString();
-    }
+	public static boolean checkSetContains(Set<String> s, NodeListOptional n){
+		for(int j = 0; j < n.size(); j++){
+			String methodName = VisitorFunctions.methodName((MethodDeclaration) n.elementAt(j));
+			if(s.contains(methodName)){
+				return true;
+			}
+		}
+		return true;
+	}
 
-    public static boolean checkId(NodeListOptional n) {
-        Set<String> temp_set = new HashSet<>();
 
-        for (int i = 0; i < n.size(); i++) {
-            String temp_string = VisitorFunctions.getId(((VarDeclaration) n.elementAt(i)).f1);
-            if (temp_set.contains(temp_string)) {
-                return false;
-            } else {
-                temp_set.add(temp_string);
-            }
-        }
-        return true;
-    }
+	public static boolean checkParameter(FormalParameterList params){
+		FormalParameter fp = params.f0; 
+		NodeListOptional nlo = params.f1; 
 
-    public static String getId(Identifier i) {
-        return i.f0.toString();
-    }
+		Set<String> distinct = new HashSet<>();
+		distinct.add(getId(fp.f1)); 
 
-    public static boolean checkSetContains(Set<String> set, NodeListOptional n) {
-        for (int i = 0; i < n.size(); i++) {
-            String temp = VisitorFunctions.methodName((MethodDeclaration) n.elementAt(i));
-            if (set.contains(temp)) {
-                return true;
-            }
-        }
-        return true;
-    }
+		for(int i = 0; i < nlo.size(); i++){
+			String paraName = VisitorFunctions.getId(((FormalParameterRest) nlo.elementAt(i)).f1.f1); 
+			if(distinct.contains(paraName)){
+				return false;
+			}
+			else{
+				distinct.add(paraName);
+			}
+		}	
+		return true;
 
-    public static boolean checkParameter(FormalParameterList p) {
-        FormalParameter temp_fp = p.f0;
-        NodeListOptional temp_nlo = p.f1;
+	}
 
-        Set<String> temp_set = new HashSet<>();
-        temp_set.add(getId(temp_fp.f1));
+	public static String methodName(MethodDeclaration method) {
+		return method.f2.f0.toString();
+	}
 
-        for (int i = 0; i < temp_nlo.size(); i++) {
-            String temp_string = VisitorFunctions.getId(((FormalParameterRest) temp_nlo.elementAt(i)).f1.f1);
-            if (temp_set.contains(temp_string)) {
-                return false;
-            } else {
-                temp_set.add(temp_string);
-            }
-        }
-        return true;
-    }
+	public static String methodType(MethodDeclaration method) {
+		return getType(method.f1);
+	}
 
-    public static String methodType(MethodDeclaration m) {
-        return getType(m.f1);
-    }
+	public static String getIntegerType(IntegerType integer) {
+		return integer.f0.toString();
+	}
 
-    public static String getIntegerType(IntegerType i) {
-        return i.f0.toString();
-    }
+	public static String getId(Identifier id) {
+		return id.f0.toString();
+	}
 
-    public static int getListSize(Node n) {
-        return ((ExpressionList)n).f1.size() + 1;
-    }
+	public static int getListSize(Node n){
+		return ((ExpressionList)n).f1.size() + 1;
+	}
 
-    public static String getType(Type t) {
-        Node n = t.f0.choice;
-        String type = "";
-        if (n instanceof IntegerType) {
-            type = ((IntegerType) n).f0.toString();
-        } else if (n instanceof BooleanType) {
-            type = ((BooleanType) n).f0.toString();
-        } else if (n instanceof ArrayType) {
-            type = "int []";
-        } else if (n instanceof Identifier) {
-            type = getId((Identifier) n);
-        }
-        return type;
-    }
+	public static String getType(Type t) {
+		Node x = t.f0.choice;
+		String typename = "";
+		if (x instanceof IntegerType) {
+			typename = ((IntegerType) x).f0.toString();
+		} else if (x instanceof BooleanType) {
+			typename = ((BooleanType) x).f0.toString();
+		}
+		else if(x instanceof ArrayType){
+			typename = "int []";
+		}
+		else if (x instanceof Identifier){
+			typename = getId((Identifier)x);
+		}
+		return typename;
+	}
 
 }

@@ -1,13 +1,2 @@
-Phase2Tester\Output\Unzipped\hw2\J2V.java:18: error: cannot find symbol
-                    Translation t = new Translation(first.getSymbolTable());
-                    ^
-  symbol:   class Translation
-  location: class J2V
-Phase2Tester\Output\Unzipped\hw2\J2V.java:18: error: cannot find symbol
-                    Translation t = new Translation(first.getSymbolTable());
-                                        ^
-  symbol:   class Translation
-  location: class J2V
 Note: Phase2Tester\Output\Unzipped\hw2\Symbol.java uses unchecked or unsafe operations.
 Note: Recompile with -Xlint:unchecked for details.
-2 errors
