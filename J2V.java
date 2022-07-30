@@ -1,4 +1,5 @@
 import syntaxtree.*;
+// I will change and import code for ClassSymbol.java VisitorFunctions.java FirstPassVisitor.java SecondPassVisitor.java PrintOutput.java and Translation.java
 
 public class J2V {
     public static void main(String[] args) {
