@@ -21,6 +21,6 @@ vapor: vapor.jar p.vapor
 		java -jar vapor.jar run p.vapor
 
 clean folder:
-	rm -rf hw2
 	rm -rf *.class
 	rm -rf *.tgz
+

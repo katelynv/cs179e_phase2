@@ -1,8 +1,6 @@
 make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # GNU Make 3.81
- 
 # Copyright (C) 2006  Free Software Foundation, Inc.
- 
 # This is free software; see the source for copying conditions.
 # There is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
@@ -12,11 +10,11 @@ make.exe all --print-data-base --no-builtin-variables --no-builtin-rules --quest
 Makefile:21: warning: overriding commands for target `vapor'
 Makefile:10: warning: ignoring old commands for target `vapor'
 
-make.exe: *** 
-No rule to make target `all'.  Stop.
+make.exe: *** No rule to make target `all'.  Stop.
 
 
-# Make data base, printed on Fri Jul 29 16:58:52 2022
+ 
+# Make data base, printed on Fri Jul 29 17:54:27 2022
 
 # Variables
 
@@ -24,20 +22,22 @@ No rule to make target `all'.  Stop.
 <D = $(patsubst %/,%,$(dir $<))
 # automatic
 ?F = $(notdir $?)
- 
 # makefile
 MAKEFLAGS = Rrqp
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
  
 # automatic
+ 
 @D = $(patsubst %/,%,$(dir $@))
 # environment
 HOMEDRIVE = C:
 # automatic
 @F = $(notdir $@)
 # automatic
+ 
 ^D = $(patsubst %/,%,$(dir $^))
+ 
 # makefile
 CURDIR := /c/Users/kienv/Desktop/cs179e/cs179_phase2
 # default
@@ -89,7 +89,7 @@ ELECTRON_RUN_AS_NODE = 1
 # automatic
 %F = $(notdir $%)
 # environment
-CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_12952_YKVGRWAAJNJPATRM
+CHROME_CRASHPAD_PIPE_NAME = \\.\pipe\crashpad_8032_ITXOCSKONCUNVAYZ
 # environment
 COMPUTERNAME = LAPTOP-B5E6O97R
 # environment
@@ -150,12 +150,16 @@ OS = Windows_NT
 VSCODE_IPC_HOOK = \\.\pipe\210ece22a9672d22b43ec6f5751c7bb1-1.69.2-main-sock
 # environment
 HOMEPATH = \
+ 
 # environment
 COMMONPROGRAMFILES(X86) = C:\Program Files (x86)\Common Files
 # environment
 PROMPT = $P$G
+ 
 # environment
+ 
 MFLAGS = -Rrqp
+ 
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
@@ -201,7 +205,7 @@ TERM = cygwin
 # environment
 FPS_BROWSER_APP_PROFILE_STRING = Internet Explorer
 # environment
-VSCODE_PID = 12952
+VSCODE_PID = 8032
 # environment
 USERDOMAIN_ROAMINGPROFILE = LAPTOP-B5E6O97R
 # variable set hash-table stats:
@@ -242,8 +246,11 @@ all:
 .SUFFIXES:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
+ 
 
+ 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
@@ -253,6 +260,7 @@ Makefile:
 #  Successfully updated.
 # variable set hash-table stats:
 # Load=0/32=0%, Rehash=0, Collisions=0/0=0%
+ 
 
 folder:
 #  Implicit rule search has not been done.
@@ -356,6 +364,6 @@ vapor: vapor.jar p.vapor vapor.jar p.vapor
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Fri Jul 29 16:58:52 2022
+# Finished Make data base on Fri Jul 29 17:54:27 2022
 
  

@@ -159,20 +159,18 @@ public class Translation extends GJNoArguDepthFirst<String> {
     }
 
     public String visit(MessageSend x) {
-        String class_var; 
         String class_name;
         String return_val; 
         String function_name;
         String param_var; 
-        ClassSymbol class_symbol;
 
-        class_var = x.f0.accept(this);
+        String class_var = x.f0.accept(this);
         class_name= print_function.getClassName(class_var);
         if (class_name == null) {
             class_name = getIDType(class_var);
         }
         
-        class_symbol= symbol_table.getClass(class_name);
+        ClassSymbol class_symbol= symbol_table.getClass(class_name);
         if (class_symbol == null) {
             class_symbol= current_class;
         }
@@ -312,7 +310,7 @@ public class Translation extends GJNoArguDepthFirst<String> {
     }
     public String recordCheck(String x){
 		if(current_class != null){
-			if(current_class.checkRecordTable(x)){
+			if(current_class.checkRecordTable(x) == true){
 				x = "[this+" + current_class.getRecordOffset(x) + "]";
 			}
 		}

@@ -57,7 +57,7 @@ public class PrintOutput {
 
     public String getRecord(Integer i) {
         String temp = createVariable();
-        print(temp + " - [this+" + i + "]");
+        print(temp + " = [this+" + i + "]");
         return temp;
     }
 

@@ -1,100 +1,100 @@
 import java.util.*;
 
 public class ClassSymbol {
-    private Symbol name;
-    private HashMap<Symbol, String> variables; 
-    private HashMap<String, FunctionSymbol> functions; 
-    private LinkedHashMap<String, Integer> vtable;
-    private Integer vtable_offset;
-    private LinkedHashMap<String, Integer> recordtable;
-    private Integer record_offset;
+	private Symbol name;
+	private HashMap<Symbol, String> fields;
+	private HashMap<String, FunctionSymbol> methods;
+	private LinkedHashMap<String, Integer> vTable; 
+	private Integer offset;
+	private LinkedHashMap<String, Integer> record; 
+	private Integer recordOffset;
 
-    public ClassSymbol (String s) {
-        name = Symbol.symbol(s);
-        variables = new HashMap<Symbol, String>();
-        functions = new HashMap<String, FunctionSymbol>();
-        this.vtable = new LinkedHashMap<String, Integer>();
-        this.recordtable = new LinkedHashMap<String, Integer>();
-        vtable_offset = 0;
-        record_offset = 4;
-    }
+	public ClassSymbol(String n) {
+		name = Symbol.symbol(n);
+		fields = new HashMap<Symbol, String>();
+		methods = new HashMap<String, FunctionSymbol>();
+		this.vTable = new LinkedHashMap<String,Integer>();
+		this.record = new LinkedHashMap<String,Integer>();
+		offset = 0; 
+		recordOffset = 4;
+	}
 
-    public Integer getvtable_offset(String s) {
-        Integer temp = 0;
-        if (vtable.containsKey(s)) {
-            temp = vtable.get(s);
-        }
-        return temp;
-    }
+	public Integer getvtable_offset(String name){
+		Integer val = 0; 
+		if(vTable.containsKey(name)){
+			val = vTable.get(name);
+		}
+		return val;
+	}
 
-    public HashMap<Symbol, String> getVariables() {
-        return this.variables;
-    }
+    public HashMap<Symbol, String> getVariables(){
+		return this.fields;
+	}
 
-    public void setVariables(HashMap<Symbol, String> h) {
-        this.variables = h;
-    }
+	public void setVariables(HashMap<Symbol, String> s){
+		this.fields = s;
+	}
 
-    public LinkedHashMap<String, Integer> getRecordTable() {
-        return this.recordtable;
-    }
+	public LinkedHashMap<String, Integer> getRecordTable(){
+		return this.record;
+	}
+	
+	public int recordTableSize(){
+		return record.size();
+	}
+	public void setRecordTable(LinkedHashMap<String, Integer> r){
+		this.record = r;
+	}
 
-    public int recordTableSize() {
-        return recordtable.size();
-    }
+	public LinkedHashMap<String, Integer> getVTable(){
+		return vTable;
+	}
 
-    public void setRecordTable(LinkedHashMap<String, Integer> h) {
-        this.recordtable = h;
-    }
+    public boolean checkRecordTable(String name){
+		if(record.containsKey(name)){
+			return true;
+		}
+		return false;
+	}
 
-    public LinkedHashMap<String, Integer> getVTable() {
-        return vtable;
-    }
+	public Integer getRecordOffset(String name){
+		return record.get(name);
+	}
 
-    public boolean checkRecordTable(String s) {
-        if (recordtable.containsKey(s)) {
-            return true;
-        }
-        return false;
-    }
+	public String getClassName() {
+		return this.name.toString();
+	}
 
-    public Integer getRecordOffset(String s) {
-        return recordtable.get(s);
-    }
+	public void addFunction(String name, String type) {
+		this.methods.put(name, new FunctionSymbol(name, type));
+		vTable.put(name,offset);
+		offset = offset + 4; 
+	}
 
-    public String getClassName() {
-        return this.name.toString();
-    }
+	public void addVariables(String name, String type) {
+		this.fields.put(Symbol.symbol(name), type);
+		record.put(name, recordOffset);
+		recordOffset = recordOffset + 4;
+	}
 
-    public void addFunction(String name, String type) {
-        this.functions.put(name, new FunctionSymbol(name, type));
-        vtable.put(name,vtable_offset);
-        vtable_offset = vtable_offset + 4;
-    }
+	public FunctionSymbol getFunction(String name) {
+		return this.methods.get(name);
+	}
 
-    public void addVariables(String name, String type) {
-        this.variables.put(Symbol.symbol(name), type);
-        recordtable.put(name,record_offset);
-        record_offset = record_offset + 4;
-    }
+	public String getVariable(String name) {
+		return this.fields.get(Symbol.symbol(name));
+	}
 
-    public FunctionSymbol getFunction(String s) {
-        return this.functions.get(s);
-    }
+	public int functionSize() {
+		return methods.size();
+	}
 
-    public String getVariable(String s) {
-        return this.variables.get(Symbol.symbol(s));
-    }
+	public int variableSize(){
+		return fields.size();
+	}
 
-    public int functionSize() {
-        return functions.size();
-    }
+	public Set<String> getFunctionNames() {
+		return vTable.keySet();
+	}
 
-    public int variableSize() {
-        return variables.size();
-    }
-
-    public Set<String> getFunctionNames() {
-        return vtable.keySet();
-    }
 }
