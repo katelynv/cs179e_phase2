@@ -27,7 +27,7 @@ public class ClassSymbol {
         return temp;
     }
 
-    public HashMap<Symbol, String> getVariales() {
+    public HashMap<Symbol, String> getVariables() {
         return this.variables;
     }
 
